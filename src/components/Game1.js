@@ -1,26 +1,17 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const BOARD_SIZE = 16;
-const INITIAL_SNAKE = [
-  { x: 8, y: 8 },
-  { x: 7, y: 8 },
-  { x: 6, y: 8 },
-];
+const INITIAL_SNAKE = [{ x: 8, y: 8 }, { x: 7, y: 8 }, { x: 6, y: 8 }];
 const INITIAL_DIRECTION = { x: 1, y: 0 };
 
 function randomFoodPosition(snake) {
   const occupied = new Set(snake.map((segment) => `${segment.x}-${segment.y}`));
   let position = null;
-
   while (!position) {
     const x = Math.floor(Math.random() * BOARD_SIZE);
     const y = Math.floor(Math.random() * BOARD_SIZE);
-    const key = `${x}-${y}`;
-    if (!occupied.has(key)) {
-      position = { x, y };
-    }
+    if (!occupied.has(`${x}-${y}`)) position = { x, y };
   }
-
   return position;
 }
 
@@ -33,152 +24,75 @@ function Game1() {
   const [running, setRunning] = useState(false);
   const [gameOver, setGameOver] = useState(false);
 
-  const snakeRef = useRef(snake);
   const directionRef = useRef(direction);
-
-  snakeRef.current = snake;
   directionRef.current = direction;
 
-  const board = useMemo(() => {
-    const cells = [];
-    for (let y = 0; y < BOARD_SIZE; y += 1) {
-      for (let x = 0; x < BOARD_SIZE; x += 1) {
-        cells.push({ x, y });
-      }
-    }
-    return cells;
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      const dirs = { ArrowUp: { x: 0, y: -1 }, ArrowDown: { x: 0, y: 1 }, ArrowLeft: { x: -1, y: 0 }, ArrowRight: { x: 1, y: 0 }};
+      const next = dirs[e.key];
+      if (next && (next.x !== -directionRef.current.x || next.y !== -directionRef.current.y)) setDirection(next);
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
   useEffect(() => {
-    const handleKeyDown = (event) => {
-      if (gameOver) return;
-      const directions = {
-        ArrowUp: { x: 0, y: -1 },
-        ArrowDown: { x: 0, y: 1 },
-        ArrowLeft: { x: -1, y: 0 },
-        ArrowRight: { x: 1, y: 0 },
-        w: { x: 0, y: -1 },
-        s: { x: 0, y: 1 },
-        a: { x: -1, y: 0 },
-        d: { x: 1, y: 0 },
-      };
-
-      const next = directions[event.key];
-      if (!next) return;
-
-      const opposite = directionRef.current.x === -next.x && directionRef.current.y === -next.y;
-      if (opposite) return;
-
-      setDirection(next);
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [gameOver]);
-
-  useEffect(() => {
     if (!running || gameOver) return;
-
-    const moveInterval = setInterval(() => {
-      setSnake((currentSnake) => {
-        const head = currentSnake[0];
-        const nextHead = {
-          x: (head.x + directionRef.current.x + BOARD_SIZE) % BOARD_SIZE,
-          y: (head.y + directionRef.current.y + BOARD_SIZE) % BOARD_SIZE,
-        };
-
-        const collided = currentSnake.some((segment) => segment.x === nextHead.x && segment.y === nextHead.y);
-        if (collided) {
-          setGameOver(true);
-          setRunning(false);
-          return currentSnake;
-        }
-
-        const ateFood = nextHead.x === food.x && nextHead.y === food.y;
-        const nextSnake = [nextHead, ...currentSnake];
-
-        if (!ateFood) {
-          nextSnake.pop();
-        } else {
-          setFood(randomFoodPosition(nextSnake));
-          setScore((currentScore) => currentScore + 10);
-          setSpeed((currentSpeed) => Math.max(80, currentSpeed - 5));
-        }
-
+    const move = setInterval(() => {
+      setSnake(curr => {
+        const head = curr[0];
+        const nextHead = { x: (head.x + directionRef.current.x + BOARD_SIZE) % BOARD_SIZE, y: (head.y + directionRef.current.y + BOARD_SIZE) % BOARD_SIZE };
+        if (curr.some(s => s.x === nextHead.x && s.y === nextHead.y)) { setGameOver(true); setRunning(false); return curr; }
+        const ate = nextHead.x === food.x && nextHead.y === food.y;
+        const nextSnake = [nextHead, ...curr];
+        if (!ate) nextSnake.pop();
+        else { setFood(randomFoodPosition(nextSnake)); setScore(s => s + 10); setSpeed(s => Math.max(80, s - 5)); }
         return nextSnake;
       });
     }, speed);
-
-    return () => clearInterval(moveInterval);
+    return () => clearInterval(move);
   }, [running, speed, food, gameOver]);
 
-  const resetGame = () => {
-    setSnake(INITIAL_SNAKE);
-    setDirection(INITIAL_DIRECTION);
-    setFood(randomFoodPosition(INITIAL_SNAKE));
-    setScore(0);
-    setSpeed(140);
-    setRunning(true);
-    setGameOver(false);
-  };
-
-  const pauseGame = () => {
-    setRunning(false);
-  };
-
-  const startGame = () => {
-    if (gameOver) {
-      resetGame();
-      return;
-    }
-    setRunning(true);
-  };
-
-  const getCellClass = (cell) => {
-    const head = snake[0];
-    if (cell.x === head.x && cell.y === head.y) return "snake-cell snake-head";
-    if (snake.slice(1).some((segment) => segment.x === cell.x && segment.y === cell.y)) {
-      return "snake-cell snake-body";
-    }
-    if (cell.x === food.x && cell.y === food.y) return "snake-cell snake-food";
-    return "snake-cell";
-  };
-
   return (
-    <div className="widget-card snake-widget">
-      <div className="widget-header justify-between">
-        <div>
-          <span className="widget-tag">Snake & Eat</span>
-          <h2 className="widget-title">Snake Feast</h2>
-        </div>
-        <span className="score-pill">Score {score}</span>
+    <div className="snk-wrap">
+      <style>{`
+        .snk-wrap { display: flex; flex-direction: column; align-items: center; color: white; }
+        .snk-board {
+          display: grid;
+          grid-template-columns: repeat(${BOARD_SIZE}, 1fr);
+          gap: 2px;
+          background: rgba(0,0,0,0.5);
+          padding: 10px;
+          border-radius: 12px;
+          border: 1px solid rgba(139, 92, 246, 0.3);
+          width: 350px; height: 350px;
+        }
+        .snk-cell { border-radius: 3px; background: rgba(255,255,255,0.03); }
+        .snk-head { background: #8b5cf6; box-shadow: 0 0 10px #8b5cf6; border-radius: 5px; }
+        .snk-body { background: rgba(139, 92, 246, 0.4); }
+        .snk-food { background: #f472b6; box-shadow: 0 0 15px #f472b6; border-radius: 50%; animation: snk-pulse 1s infinite; }
+        @keyframes snk-pulse { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
+        .snk-score { font-family: 'Orbitron'; font-size: 1.5rem; margin-bottom: 20px; color: #8b5cf6; }
+        .snk-controls { margin-top: 25px; display: flex; gap: 15px; }
+        .snk-btn { padding: 10px 25px; border-radius: 10px; border: none; cursor: pointer; font-weight: 700; background: #8b5cf6; color: white; }
+      `}</style>
+      <div className="snk-score">SCORE: {score}</div>
+      <div className="snk-board">
+        {Array.from({ length: BOARD_SIZE * BOARD_SIZE }).map((_, i) => {
+          const x = i % BOARD_SIZE; const y = Math.floor(i / BOARD_SIZE);
+          const isHead = snake[0].x === x && snake[0].y === y;
+          const isBody = snake.slice(1).some(s => s.x === x && s.y === y);
+          const isFood = food.x === x && food.y === y;
+          return <div key={i} className={`snk-cell ${isHead ? 'snk-head' : isBody ? 'snk-body' : isFood ? 'snk-food' : ''}`} />;
+        })}
       </div>
-
-      <div className="snake-meta">Use Arrow Keys or WASD to steer. Eat food and grow larger.</div>
-
-      <div className="snake-board">
-        {board.map((cell) => (
-          <div key={`${cell.x}-${cell.y}`} className={getCellClass(cell)} />
-        ))}
-      </div>
-
-      <div className="snake-controls widget-actions">
-        <button className="widget-button widget-button-primary" onClick={startGame}>
-          {running ? "Resume" : gameOver ? "Restart" : "Start"}
+      <div className="snk-controls">
+        <button className="snk-btn" onClick={() => { if(gameOver) { setSnake(INITIAL_SNAKE); setScore(0); setGameOver(false); } setRunning(!running); }}>
+          {gameOver ? "RESTART" : running ? "PAUSE" : "START"}
         </button>
-        <button className="widget-button widget-button-secondary" onClick={pauseGame}>
-          Pause
-        </button>
       </div>
-
-      <div className="snake-footer">
-        <span className="snake-status">Speed: {Math.round(220 - speed)} / 140</span>
-        <span className="snake-status">Status: {gameOver ? "Game Over" : running ? "Running" : "Paused"}</span>
-      </div>
-
-      {gameOver && <div className="widget-result widget-result-alert">Game Over — hit Start to play again.</div>}
     </div>
   );
 }
-
 export default Game1;

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 function ObjectExample() {
   const [user, setUser] = useState({ name: "Aru", age: 25 });

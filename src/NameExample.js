@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 function NameExample() {
   const [likes, setLikes] = useState(0); // Count of likes

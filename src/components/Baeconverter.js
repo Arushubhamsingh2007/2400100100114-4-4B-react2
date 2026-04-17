@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 const baseOptions = [
   { value: 2, label: "Binary" },
@@ -31,344 +31,232 @@ function Baeconverter() {
   const [fromBase, setFromBase] = useState(2);
   const [toBase, setToBase] = useState(10);
   const [result, setResult] = useState("");
-  const [status, setStatus] = useState("Enter a value and choose a conversion path.");
+  const [status, setStatus] = useState("Enter value & choose path.");
 
   const handleConvert = () => {
     if (!validateValue(inputValue, fromBase)) {
       setResult("");
-      setStatus(`Invalid ${baseOptions.find((b) => b.value === fromBase).label} value.`);
+      setStatus(`Error: Invalid ${baseOptions.find((b) => b.value === fromBase).label} input.`);
       return;
     }
 
     if (fromBase === toBase) {
       setResult(inputValue.trim().toUpperCase());
-      setStatus("Same base selected; value is unchanged.");
+      setStatus("Base identical; no shift required.");
       return;
     }
 
     const converted = convertBase(inputValue, fromBase, toBase);
     setResult(converted);
-    setStatus(`Converted from ${baseOptions.find((b) => b.value === fromBase).label} to ${baseOptions.find((b) => b.value === toBase).label}.`);
+    setStatus(`Converted to ${baseOptions.find((b) => b.value === toBase).label}.`);
   };
 
   const handleSwap = () => {
     setFromBase(toBase);
     setToBase(fromBase);
     setResult("");
-    setStatus("Swap complete. Update the value and convert again.");
+    setStatus("I/O Matrix Swapped.");
   };
 
   return (
-    <div className="convert-shell">
-      <div className="convert-card">
-        <div className="convert-header">
-          <div>
-            <span className="convert-tag">Base Converter</span>
-            <h1>Binary, Octal, Decimal & Hex</h1>
-          </div>
-          <p className="convert-description">
-            Enter a number in any supported base and convert it instantly to another base. The converter validates input and displays the result with a premium animated UI.
-          </p>
-        </div>
-
-        <div className="convert-panel">
-          <div className="convert-field">
-            <label>Input value</label>
-            <input
-              type="text"
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              placeholder="Enter binary, octal, decimal or hex"
-            />
-          </div>
-
-          <div className="convert-field split">
-            <div>
-              <label>From base</label>
-              <select value={fromBase} onChange={(e) => setFromBase(Number(e.target.value))}>
-                {baseOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <button className="convert-swap" onClick={handleSwap}>
-              Swap
-            </button>
-            <div>
-              <label>To base</label>
-              <select value={toBase} onChange={(e) => setToBase(Number(e.target.value))}>
-                {baseOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          <button className="convert-button" onClick={handleConvert}>
-            Convert Now
-          </button>
-
-          <div className="convert-output">
-            <div className="convert-output-card">
-              <span className="convert-output-label">Result</span>
-              <p>{result || "-"}</p>
-            </div>
-            <p className="convert-status">{status}</p>
-          </div>
-
-          <div className="convert-tips">
-            <div className="convert-tip">
-              <strong>Binary</strong> uses only 0 and 1.
-            </div>
-            <div className="convert-tip">
-              <strong>Octal</strong> uses digits 0–7.
-            </div>
-            <div className="convert-tip">
-              <strong>Hex</strong> uses 0–9 and A–F.
-            </div>
-          </div>
-        </div>
-      </div>
-
+    <div className="conv-v2-container">
       <style>{`
-        .convert-shell {
-          min-height: 100vh;
+        .conv-v2-container {
+          width: 100%;
+          height: 100%;
           display: flex;
           justify-content: center;
-          align-items: center;
-          padding: 48px 16px 72px;
-          background: radial-gradient(circle at top left, rgba(59,130,246,0.18), transparent 24%),
-            radial-gradient(circle at bottom right, rgba(236,72,153,0.16), transparent 26%),
-            linear-gradient(180deg, #020617, #08101f);
+          align-items: flex-start;
+          padding: 20px;
           box-sizing: border-box;
+          overflow-y: auto;
         }
 
-        .convert-card {
-          width: min(940px, 100%);
-          background: rgba(8, 16, 34, 0.96);
-          border: 1px solid rgba(255,255,255,0.12);
-          border-radius: 34px;
-          padding: 38px;
-          box-shadow: 0 40px 120px rgba(0,0,0,0.35);
-          backdrop-filter: blur(20px);
-          position: relative;
-          overflow: hidden;
+        .conv-v2-card {
+          width: 100%;
+          max-width: 650px;
+          background: rgba(15, 23, 42, 0.4);
+          backdrop-filter: blur(25px);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-top: 3px solid var(--accent-color);
+          border-radius: 20px;
+          padding: 25px;
+          box-shadow: 0 40px 100px rgba(0, 0, 0, 0.5);
+          display: flex;
+          flex-direction: column;
+          gap: 20px;
         }
 
-        .convert-card::before {
-          content: "";
-          position: absolute;
-          top: -64px;
-          right: -74px;
-          width: 240px;
-          height: 240px;
-          border-radius: 50%;
-          background: rgba(59,130,246,0.12);
-          filter: blur(28px);
+        .conv-v2-header {
+          border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+          padding-bottom: 15px;
         }
 
-        .convert-card::after {
-          content: "";
-          position: absolute;
-          bottom: -60px;
-          left: -60px;
-          width: 200px;
-          height: 200px;
-          border-radius: 50%;
-          background: rgba(236,72,153,0.14);
-          filter: blur(24px);
-        }
-
-        .convert-header {
-          position: relative;
-          z-index: 1;
-          margin-bottom: 28px;
-        }
-
-        .convert-tag {
-          display: inline-flex;
-          padding: 12px 18px;
-          border-radius: 999px;
-          background: rgba(59,130,246,0.14);
-          color: #7dd3fc;
-          text-transform: uppercase;
-          letter-spacing: 0.13em;
-          font-size: 0.78rem;
-          font-weight: 700;
-        }
-
-        .convert-header h1 {
-          margin: 18px 0 10px;
-          font-size: clamp(2.2rem, 4vw, 3.2rem);
-          color: #f8fafc;
-          letter-spacing: 0.04em;
-        }
-
-        .convert-description {
+        .conv-v2-header h2 {
+          font-family: 'Orbitron';
+          font-size: 1.2rem;
           margin: 0;
-          max-width: 760px;
-          font-size: 1rem;
-          color: rgba(226,232,240,0.88);
-          line-height: 1.8;
+          color: var(--accent-color);
+          letter-spacing: 2px;
         }
 
-        .convert-panel {
-          position: relative;
-          z-index: 1;
-          display: grid;
-          gap: 22px;
+        .conv-v2-header p {
+          font-size: 0.8rem;
+          color: #64748b;
+          margin-top: 5px;
         }
 
-        .convert-field {
+        .conv-v2-form {
           display: grid;
+          gap: 15px;
+        }
+
+        .conv-v2-group {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+        }
+
+        .conv-v2-label {
+          font-family: 'Fira Code';
+          font-size: 0.7rem;
+          color: var(--accent-color);
+          font-weight: 700;
+          letter-spacing: 1px;
+          text-transform: uppercase;
+        }
+
+        .conv-v2-input, .conv-v2-select {
+          background: rgba(0,0,0,0.3);
+          border: 1px solid rgba(255,255,255,0.1);
+          border-radius: 12px;
+          padding: 12px 15px;
+          color: #fff;
+          font-family: 'Poppins';
+          font-size: 0.9rem;
+          outline: none;
+          transition: border-color 0.3s;
+        }
+
+        .conv-v2-input:focus {
+          border-color: var(--accent-color);
+        }
+
+        .conv-v2-row {
+          display: grid;
+          grid-template-columns: 1fr auto 1fr;
+          align-items: flex-end;
           gap: 10px;
         }
 
-        .convert-field.split {
-          grid-template-columns: 1fr auto 1fr;
-          align-items: end;
-        }
-
-        .convert-field label {
-          color: #94a3b8;
-          text-transform: uppercase;
-          letter-spacing: 0.12em;
-          font-size: 0.8rem;
-          font-weight: 700;
-        }
-
-        .convert-field input,
-        .convert-field select {
-          width: 100%;
-          border-radius: 18px;
-          border: 1px solid rgba(255,255,255,0.14);
-          background: rgba(15,23,42,0.92);
-          color: #f8fafc;
-          padding: 16px 18px;
-          font-size: 1rem;
-          outline: none;
-          transition: border-color 0.2s ease, transform 0.2s ease;
-        }
-
-        .convert-field input:focus,
-        .convert-field select:focus {
-          border-color: rgba(59,130,246,0.65);
-          transform: translateY(-1px);
-        }
-
-        .convert-swap {
-          margin: 0 10px;
-          min-width: 72px;
-          border-radius: 16px;
-          border: none;
-          background: linear-gradient(135deg, #a855f7, #3b82f6);
+        .conv-v2-swap {
+          background: rgba(255,255,255,0.05);
+          border: 1px solid rgba(255,255,255,0.1);
           color: #fff;
-          font-weight: 700;
+          width: 45px;
+          height: 45px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
           cursor: pointer;
-          height: 52px;
-          box-shadow: 0 16px 30px rgba(59,130,246,0.22);
-          transition: transform 0.2s ease, box-shadow 0.2s ease;
+          font-size: 0.7rem;
+          transition: all 0.3s;
         }
 
-        .convert-swap:hover {
-          transform: translateY(-2px);
+        .conv-v2-swap:hover {
+          background: var(--accent-color);
+          color: #000;
+          box-shadow: 0 0 15px var(--accent-glow);
         }
 
-        .convert-button {
+        .conv-v2-action {
+          background: var(--accent-color);
+          color: #000;
           border: none;
-          border-radius: 18px;
-          padding: 16px 24px;
-          font-size: 1rem;
-          font-weight: 700;
-          color: #fff;
-          background: linear-gradient(135deg, #22d3ee, #818cf8);
-          box-shadow: 0 20px 50px rgba(34,211,238,0.2);
+          border-radius: 12px;
+          padding: 15px;
+          font-family: 'Orbitron';
+          font-weight: 900;
+          font-size: 0.9rem;
           cursor: pointer;
-          transition: transform 0.22s ease, box-shadow 0.22s ease;
+          transition: all 0.3s;
+          letter-spacing: 1px;
         }
 
-        .convert-button:hover {
+        .conv-v2-action:hover {
           transform: translateY(-2px);
+          box-shadow: 0 10px 20px var(--accent-glow);
         }
 
-        .convert-output {
-          display: grid;
-          gap: 16px;
+        .conv-v2-result-container {
+          background: rgba(255,255,255,0.03);
+          border-radius: 15px;
+          padding: 20px;
+          text-align: center;
+          border: 1px dashed rgba(255,255,255,0.1);
         }
 
-        .convert-output-card {
-          padding: 24px;
-          border-radius: 26px;
-          background: rgba(15,23,42,0.9);
-          border: 1px solid rgba(56,189,248,0.12);
-          box-shadow: inset 0 0 0 1px rgba(255,255,255,0.03);
-        }
-
-        .convert-output-label {
-          display: inline-flex;
-          margin-bottom: 10px;
-          color: #93c5fd;
-          text-transform: uppercase;
-          font-size: 0.8rem;
-          letter-spacing: 0.12em;
-          font-weight: 700;
-        }
-
-        .convert-output-card p {
-          margin: 0;
-          font-size: 1.6rem;
-          font-weight: 700;
-          color: #f8fafc;
+        .conv-v2-result-val {
+          font-family: 'Orbitron';
+          font-size: 1.5rem;
+          color: #fff;
           word-break: break-all;
+          margin: 10px 0;
         }
 
-        .convert-status {
-          margin: 0;
-          color: rgba(226,232,240,0.82);
-          font-size: 0.95rem;
-          line-height: 1.7;
-        }
-
-        .convert-tips {
-          display: grid;
-          grid-template-columns: repeat(3, minmax(0, 1fr));
-          gap: 16px;
-          margin-top: 2px;
-        }
-
-        .convert-tip {
-          padding: 18px 16px;
-          border-radius: 22px;
-          background: rgba(255,255,255,0.04);
-          border: 1px solid rgba(255,255,255,0.08);
-          color: #cbd5e1;
-          font-size: 0.95rem;
-          line-height: 1.6;
-        }
-
-        .convert-tip strong {
-          color: #f8fafc;
-        }
-
-        @media (max-width: 820px) {
-          .convert-field.split {
-            grid-template-columns: 1fr;
-          }
-
-          .convert-swap {
-            width: 100%;
-            margin: 10px 0;
-          }
-
-          .convert-tips {
-            grid-template-columns: 1fr;
-          }
+        .conv-v2-status {
+          font-family: 'Fira Code';
+          font-size: 0.7rem;
+          color: #64748b;
         }
       `}</style>
+
+      <div className="conv-v2-card">
+        <div className="conv-v2-header">
+          <h2>NEURAL BASE CONVERTER</h2>
+          <p>Multi-dimensional numerical system transition engine.</p>
+        </div>
+
+        <div className="conv-v2-form">
+          <div className="conv-v2-group">
+            <span className="conv-v2-label">Enter Input String</span>
+            <input 
+              className="conv-v2-input"
+              type="text"
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              placeholder="e.g. 101010 or FF02..."
+            />
+          </div>
+
+          <div className="conv-v2-row">
+            <div className="conv-v2-group">
+              <span className="conv-v2-label">Source</span>
+              <select className="conv-v2-select" value={fromBase} onChange={(e) => setFromBase(Number(e.target.value))}>
+                {baseOptions.map(opt => <option key={opt.value} value={opt.value}>{opt.label}</option>)}
+              </select>
+            </div>
+            
+            <button className="conv-v2-swap" onClick={handleSwap}>⇄</button>
+
+            <div className="conv-v2-group">
+              <span className="conv-v2-label">Target</span>
+              <select className="conv-v2-select" value={toBase} onChange={(e) => setToBase(Number(e.target.value))}>
+                {baseOptions.map(opt => <option key={opt.value} value={opt.value}>{opt.label}</option>)}
+              </select>
+            </div>
+          </div>
+
+          <button className="conv-v2-action" onClick={handleConvert}>DEPLOY CONVERSION</button>
+        </div>
+
+        <div className="conv-v2-result-container">
+          <span className="conv-v2-label">Resultant Matrix</span>
+          <div className="conv-v2-result-val">{result || "---"}</div>
+          <div className="conv-v2-status">{status}</div>
+        </div>
+      </div>
     </div>
   );
 }

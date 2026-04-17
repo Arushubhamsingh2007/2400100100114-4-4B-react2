@@ -1,147 +1,112 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import { useState } from "react";
 
-const ARENA_SIZE = 16;
-const INITIAL_SHOTS = 5;
-
-function randomTarget() {
-  return {
-    x: Math.floor(Math.random() * ARENA_SIZE),
-    y: Math.floor(Math.random() * ARENA_SIZE),
-  };
-}
+const ARENA_SIZE = 12;
 
 function Game2() {
-  const [target, setTarget] = useState(randomTarget());
+  const [target, setTarget] = useState({ x: 5, y: 5 });
   const [score, setScore] = useState(0);
-  const [shots, setShots] = useState(INITIAL_SHOTS);
-  const [combo, setCombo] = useState(0);
+  const [shots, setShots] = useState(10);
   const [gameOver, setGameOver] = useState(false);
-  const [fastMode, setFastMode] = useState(false);
-  const [timer, setTimer] = useState(10);
-  const timerRef = useRef(null);
-  const board = useMemo(() => {
-    const cells = [];
-    for (let y = 0; y < ARENA_SIZE; y += 1) {
-      for (let x = 0; x < ARENA_SIZE; x += 1) {
-        cells.push({ x, y });
-      }
-    }
-    return cells;
-  }, []);
+  const [active, setActive] = useState(false);
 
-  useEffect(() => {
-    if (!fastMode || gameOver) return;
+  const spawn = () => ({
+    x: Math.floor(Math.random() * ARENA_SIZE),
+    y: Math.floor(Math.random() * ARENA_SIZE)
+  });
 
-    timerRef.current = setInterval(() => {
-      setTimer((prev) => {
-        if (prev <= 1) {
-          clearInterval(timerRef.current);
-          setGameOver(true);
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-
-    return () => clearInterval(timerRef.current);
-  }, [fastMode, gameOver]);
-
-  useEffect(() => {
-    if (gameOver && timerRef.current) {
-      clearInterval(timerRef.current);
-    }
-  }, [gameOver]);
-
-  const resetGame = () => {
-    setTarget(randomTarget());
-    setScore(0);
-    setShots(INITIAL_SHOTS);
-    setCombo(0);
-    setGameOver(false);
-    setFastMode(false);
-    setTimer(10);
-    clearInterval(timerRef.current);
-  };
-
-  const shootTarget = (cell) => {
-    if (gameOver) return;
-    if (shots <= 0) return;
-
-    setShots((prev) => prev - 1);
-
-    const hit = cell.x === target.x && cell.y === target.y;
-    if (hit) {
-      const newCombo = combo + 1;
-      setCombo(newCombo);
-      setScore((prev) => prev + 20 + newCombo * 2);
-      setTarget(randomTarget());
-      if (shots > 0 && !fastMode) {
-        setFastMode(true);
-        setTimer(10);
-      }
+  const hit = (x, y) => {
+    if (!active || gameOver) return;
+    if (x === target.x && y === target.y) {
+      setScore(s => s + 20);
+      setTarget(spawn());
     } else {
-      setCombo(0);
-    }
-
-    if (shots - 1 <= 0) {
-      setGameOver(true);
+      setShots(s => {
+        if (s <= 1) setGameOver(true);
+        return s - 1;
+      });
     }
   };
 
   return (
-    <div className="widget-card shoot-widget">
-      <div className="widget-header justify-between">
-        <div>
-          <span className="widget-tag">Shooting Ball</span>
-          <h2 className="widget-title">Target Blitz</h2>
-        </div>
-        <span className="score-pill">Score {score}</span>
+    <div className="blz-wrap">
+      <style>{`
+        .blz-wrap { display: flex; flex-direction: column; align-items: center; color: white; }
+        .blz-stats { display: flex; gap: 40px; margin-bottom: 25px; font-family: 'Orbitron'; }
+        .blz-stat-box { text-align: center; }
+        .blz-stat-box span { display: block; font-size: 0.7rem; color: #94a3b8; margin-bottom: 5px; }
+        .blz-stat-box strong { font-size: 1.4rem; color: #f472b6; }
+        .blz-grid {
+          display: grid;
+          grid-template-columns: repeat(${ARENA_SIZE}, 1fr);
+          gap: 4px;
+          background: rgba(0,0,0,0.4);
+          padding: 10px;
+          border-radius: 16px;
+          border: 1px solid rgba(244, 114, 182, 0.2);
+          width: 360px; height: 360px;
+        }
+        .blz-cell {
+          background: rgba(255,255,255,0.02);
+          border-radius: 6px;
+          cursor: crosshair;
+          transition: all 0.2s;
+          border: 1px solid transparent;
+        }
+        .blz-cell:hover { background: rgba(244, 114, 182, 0.1); border-color: rgba(244, 114, 182, 0.2); }
+        .blz-target {
+          background: #f472b6;
+          box-shadow: 0 0 20px #f472b6, inset 0 0 10px white;
+          border-radius: 50%;
+          transform: scale(0.85);
+          animation: blz-ping 0.8s infinite alternate;
+        }
+        @keyframes blz-ping { from { transform: scale(0.7); opacity: 0.7; } to { transform: scale(0.9); opacity: 1; } }
+        .blz-overlay {
+          position: absolute;
+          inset: 0;
+          background: rgba(0,0,0,0.8);
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          z-index: 10;
+          border-radius: 16px;
+        }
+        .blz-btn {
+          padding: 12px 30px;
+          border-radius: 12px;
+          border: none;
+          background: #f472b6;
+          color: white;
+          font-weight: 700;
+          cursor: pointer;
+        }
+      `}</style>
+
+      <div className="blz-stats">
+        <div className="blz-stat-box"><span>SCORE</span><strong>{score}</strong></div>
+        <div className="blz-stat-box"><span>AMMO</span><strong>{shots}</strong></div>
       </div>
 
-      <div className="shoot-meta">Click the glowing target to score. Keep your streak alive and finish with style.</div>
-
-      <div className="shoot-grid">
-        {board.map((cell) => {
-          const isTarget = cell.x === target.x && cell.y === target.y;
-          return (
-            <button
-              key={`${cell.x}-${cell.y}`}
-              type="button"
-              className={`shoot-cell ${isTarget ? "shoot-target" : "shoot-cell-empty"}`}
-              onClick={() => shootTarget(cell)}
-            />
-          );
+      <div className="blz-grid" style={{position: 'relative'}}>
+        {!active && (
+          <div className="blz-overlay">
+            <button className="blz-btn" onClick={() => setActive(true)}>INITIALIZE SIGHTS</button>
+          </div>
+        )}
+        {gameOver && (
+          <div className="blz-overlay">
+            <h2 style={{color: '#f472b6', marginBottom: '15px', fontFamily: 'Orbitron'}}>SYSTEM DEPLETED</h2>
+            <button className="blz-btn" onClick={() => { setScore(0); setShots(10); setGameOver(false); setTarget(spawn()); }}>RELOAD</button>
+          </div>
+        )}
+        {Array.from({ length: ARENA_SIZE * ARENA_SIZE }).map((_, i) => {
+          const x = i % ARENA_SIZE; const y = Math.floor(i / ARENA_SIZE);
+          const isTarget = target.x === x && target.y === y;
+          return <div key={i} className={`blz-cell ${isTarget ? 'blz-target' : ''}`} onClick={() => hit(x, y)} />;
         })}
       </div>
-
-      <div className="shoot-stats widget-actions">
-        <div className="shoot-tile">
-          <span>Shots</span>
-          <strong>{shots}</strong>
-        </div>
-        <div className="shoot-tile">
-          <span>Combo</span>
-          <strong>{combo}</strong>
-        </div>
-        <div className="shoot-tile">
-          <span>Time</span>
-          <strong>{fastMode ? `${timer}s` : "Ready"}</strong>
-        </div>
-      </div>
-
-      <div className="widget-actions">
-        <button className="widget-button widget-button-primary" onClick={resetGame}>
-          {gameOver ? "Play Again" : "Restart"}
-        </button>
-      </div>
-
-      {gameOver && (
-        <div className="widget-result widget-result-alert">
-          {score === 0 ? "No hits yet — keep shooting!" : "Game Over — your final score is " + score}
-        </div>
-      )}
     </div>
   );
 }
-
 export default Game2;

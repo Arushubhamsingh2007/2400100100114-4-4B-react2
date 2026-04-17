@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 function Stack() {
   const [stack, setStack] = useState([]);
@@ -106,21 +106,26 @@ function Stack() {
         .stack-shell {
           display: flex;
           justify-content: center;
-          padding: 40px 16px 60px;
-          min-height: 100vh;
+          padding: 10px;
+          height: 100%;
+          width: 100%;
           box-sizing: border-box;
+          overflow: hidden;
         }
 
         .stack-card {
-          width: min(840px, 100%);
+          width: 100%;
+          max-width: 800px;
           background: rgba(10, 18, 34, 0.92);
           border: 1px solid rgba(255,255,255,0.12);
-          border-radius: 32px;
-          padding: 32px;
+          border-radius: 24px;
+          padding: 20px;
           box-shadow: 0 28px 90px rgba(0,0,0,0.35);
           backdrop-filter: blur(18px);
           color: #e2e8f0;
           position: relative;
+          display: flex;
+          flex-direction: column;
           overflow: hidden;
         }
 
@@ -136,7 +141,7 @@ function Stack() {
         .stack-header {
           position: relative;
           z-index: 1;
-          margin-bottom: 28px;
+          margin-bottom: 15px;
         }
 
         .stack-tag {
@@ -152,8 +157,8 @@ function Stack() {
         }
 
         .stack-header h1 {
-          margin: 18px 0 10px;
-          font-size: clamp(2rem, 3.5vw, 3rem);
+          margin: 10px 0 5px;
+          font-size: 1.5rem;
           letter-spacing: 0.06em;
           color: #ffffff;
         }
@@ -161,8 +166,9 @@ function Stack() {
         .stack-description {
           margin: 0;
           max-width: 700px;
-          line-height: 1.8;
+          line-height: 1.4;
           color: rgba(226,232,240,0.9);
+          font-size: 0.8rem;
         }
 
         .stack-actions {
@@ -173,11 +179,11 @@ function Stack() {
 
         .stack-input-label {
           display: block;
-          margin-bottom: 12px;
+          margin-bottom: 8px;
           color: #94a3b8;
           letter-spacing: 0.12em;
           text-transform: uppercase;
-          font-size: 0.82rem;
+          font-size: 0.7rem;
         }
 
         .stack-input-row {
@@ -236,11 +242,14 @@ function Stack() {
 
         .stack-visual-wrap {
           position: relative;
-          padding: 24px;
+          padding: 15px;
           background: rgba(15,23,42,0.78);
           border: 1px solid rgba(255,255,255,0.08);
-          border-radius: 28px;
+          border-radius: 20px;
           box-shadow: inset 0 0 0 1px rgba(255,255,255,0.03);
+          flex: 1;
+          overflow-y: auto;
+          margin-bottom: 10px;
         }
 
         .stack-axis {
@@ -259,9 +268,9 @@ function Stack() {
           display: flex;
           flex-direction: column;
           align-items: center;
-          gap: 12px;
-          min-height: 360px;
-          justify-content: center;
+          gap: 8px;
+          min-height: 450px;
+          justify-content: flex-start;
         }
 
         .stack-empty {
@@ -273,15 +282,15 @@ function Stack() {
         }
 
         .stack-node {
-          width: 260px;
+          width: 220px;
           display: flex;
           justify-content: space-between;
           align-items: center;
-          padding: 18px 20px;
-          border-radius: 20px;
+          padding: 10px 15px;
+          border-radius: 12px;
           border: 1px solid rgba(255,255,255,0.14);
           background: linear-gradient(135deg, rgba(15,23,42,0.94), rgba(30,41,59,0.96));
-          box-shadow: 0 18px 40px rgba(0,0,0,0.18);
+          box-shadow: 0 10px 25px rgba(0,0,0,0.18);
           color: #f8fafc;
           transform: translateY(20px);
           opacity: 0;
@@ -320,7 +329,7 @@ function Stack() {
         }
 
         .stack-node-label {
-          font-size: 1rem;
+          font-size: 0.85rem;
           font-weight: 700;
           letter-spacing: 0.02em;
         }
@@ -329,12 +338,12 @@ function Stack() {
           display: inline-flex;
           align-items: center;
           justify-content: center;
-          width: 42px;
-          height: 42px;
+          width: 30px;
+          height: 30px;
           border-radius: 50%;
           background: radial-gradient(circle, rgba(56,189,248,0.3), rgba(15,23,42,0.8));
           color: #dbeafe;
-          font-size: 0.95rem;
+          font-size: 0.8rem;
           font-weight: 700;
         }
 

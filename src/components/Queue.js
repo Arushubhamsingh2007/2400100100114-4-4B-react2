@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 function Queue() {
   const [queue, setQueue] = useState([]);
@@ -78,21 +78,25 @@ function Queue() {
         .queue-shell {
           display: flex;
           justify-content: center;
-          padding: 44px 16px 64px;
-          min-height: 100vh;
-          background: radial-gradient(circle at top left, rgba(59,130,246,0.16), transparent 22%), radial-gradient(circle at bottom right, rgba(236,72,153,0.16), transparent 24%), linear-gradient(180deg, #020617, #07111f);
+          padding: 15px;
+          height: 100%;
+          width: 100%;
           box-sizing: border-box;
+          overflow: hidden;
         }
 
         .queue-card {
-          width: min(900px, 100%);
-          padding: 34px;
-          border-radius: 34px;
+          width: 100%;
+          max-width: 800px;
+          padding: 24px;
+          border-radius: 28px;
           background: rgba(10, 18, 34, 0.95);
           border: 1px solid rgba(255,255,255,0.12);
           box-shadow: 0 34px 90px rgba(0,0,0,0.32);
           backdrop-filter: blur(20px);
           position: relative;
+          display: flex;
+          flex-direction: column;
           overflow: hidden;
         }
 
@@ -123,7 +127,7 @@ function Queue() {
         .queue-header {
           position: relative;
           z-index: 1;
-          margin-bottom: 28px;
+          margin-bottom: 20px;
         }
 
         .queue-tag {
@@ -139,8 +143,8 @@ function Queue() {
         }
 
         .queue-header h1 {
-          margin: 18px 0 12px;
-          font-size: clamp(2rem, 3.5vw, 3.2rem);
+          margin: 10px 0 5px;
+          font-size: 1.5rem;
           color: #f8fafc;
           letter-spacing: 0.03em;
         }
@@ -148,14 +152,16 @@ function Queue() {
         .queue-description {
           margin: 0;
           max-width: 760px;
-          line-height: 1.8;
+          line-height: 1.4;
           color: rgba(226,232,240,0.88);
+          font-size: 0.8rem;
         }
 
         .queue-controls {
           position: relative;
           z-index: 1;
-          margin-bottom: 32px;
+          margin-bottom: 25px;
+          flex-shrink: 0;
         }
 
         .queue-label {
@@ -224,20 +230,24 @@ function Queue() {
 
         .queue-display-wrap {
           position: relative;
-          padding: 24px;
-          border-radius: 28px;
-          background: rgba(15,23,42,0.82);
+          padding: 20px;
+          border-radius: 20px;
+          background: rgba(15,23,42,0.85);
           border: 1px solid rgba(255,255,255,0.08);
-          box-shadow: inset 0 0 0 1px rgba(255,255,255,0.03);
+          flex: 1;
+          overflow-y: auto;
+          display: flex;
+          align-items: center;
+          justify-content: center;
         }
 
         .queue-track {
           display: flex;
           flex-wrap: wrap;
-          gap: 16px;
-          justify-content: center;
-          min-height: 220px;
-          align-items: center;
+          gap: 10px;
+          justify-content: flex-start;
+          min-height: 350px;
+          align-items: flex-start;
           position: relative;
         }
 
@@ -264,18 +274,18 @@ function Queue() {
         .queue-item {
           position: relative;
           z-index: 1;
-          min-width: 140px;
-          flex: 1 1 120px;
-          padding: 18px 20px;
-          border-radius: 24px;
+          min-width: 100px;
+          flex: 0 1 auto;
+          padding: 10px 15px;
+          border-radius: 12px;
           background: linear-gradient(180deg, rgba(15,23,42,0.95), rgba(30,41,59,0.96));
           border: 1px solid rgba(255,255,255,0.14);
-          box-shadow: 0 18px 30px rgba(0,0,0,0.22);
+          box-shadow: 0 10px 20px rgba(0,0,0,0.22);
           color: #f8fafc;
           display: flex;
           flex-direction: column;
           align-items: center;
-          gap: 12px;
+          gap: 8px;
           overflow: hidden;
           animation: queue-pop 0.35s ease forwards;
         }
@@ -293,7 +303,7 @@ function Queue() {
 
         .queue-item span {
           display: block;
-          font-size: 1.05rem;
+          font-size: 0.85rem;
           font-weight: 700;
           letter-spacing: 0.01em;
         }
