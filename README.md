@@ -4,7 +4,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## 🚀 Live Demo
 Check out the deployed site here:  
-[https://arushubhamsingh2007.github.io/2400100100114-4-4B-react/](https://arushubhamsingh2007.github.io/2400100100114-4-4B-react/)
+[https://arushubhamsingh2007.github.io/2400100100114-4-4B-react2/](https://arushubhamsingh2007.github.io/2400100100114-4-4B-react/)
 
 ## 🛠️ Getting Started (Local Development)
 
