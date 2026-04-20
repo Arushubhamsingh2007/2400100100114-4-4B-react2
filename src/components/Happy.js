@@ -6,7 +6,6 @@ function Happy() {
   const [num, setNum] = useState("");
   const [result, setResult] = useState(null);
   const [sequence, setSequence] = useState([]);
-  const [isProcessing, setIsProcessing] = useState(false);
 
   const checkHappy = (n) => {
     let current = parseInt(n);
@@ -41,10 +40,6 @@ function Happy() {
     setResult(isHappy);
     setSequence(steps);
   }, [num]);
-
-  const deployScan = () => {
-    // Legacy support or manual force if needed
-  };
 
   return (
     <div className="happy-shell">

@@ -6,7 +6,6 @@ function Narcissistic() {
   const [num, setNum] = useState("");
   const [result, setResult] = useState(null);
   const [calculation, setCalculation] = useState("");
-  const [isProcessing, setIsProcessing] = useState(false);
 
   const checkNarcissistic = (n) => {
     const s = n.toString();
@@ -39,10 +38,6 @@ function Narcissistic() {
     setResult(data.isNarc);
     setCalculation(data.eq);
   }, [num]);
-
-  const deployScan = () => {
-    // Legacy support
-  };
 
   return (
     <div className="narc-shell">

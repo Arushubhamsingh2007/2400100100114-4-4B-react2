@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { FaSearch, FaSyncAlt } from "react-icons/fa";
+import { FaSyncAlt } from "react-icons/fa";
 
 function Palindrome() {
   const [text, setText] = useState("");
