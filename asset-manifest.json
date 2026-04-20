@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/2400100100114-4-4B-react2/static/css/main.b3c769bb.css",
-    "main.js": "/2400100100114-4-4B-react2/static/js/main.91a807c3.js",
+    "main.css": "/2400100100114-4-4B-react2/static/css/main.7b8bff52.css",
+    "main.js": "/2400100100114-4-4B-react2/static/js/main.5206aa05.js",
     "static/media/WhatsApp Image 2026-04-11 at 22.34.23.jpeg": "/2400100100114-4-4B-react2/static/media/WhatsApp Image 2026-04-11 at 22.34.23.fc546fd874d02b10e793.jpeg",
     "static/media/Avatar.jpeg": "/2400100100114-4-4B-react2/static/media/Avatar.0f4e3d6fd6d865902f7e.jpeg",
     "index.html": "/2400100100114-4-4B-react2/index.html",
-    "main.b3c769bb.css.map": "/2400100100114-4-4B-react2/static/css/main.b3c769bb.css.map",
-    "main.91a807c3.js.map": "/2400100100114-4-4B-react2/static/js/main.91a807c3.js.map"
+    "main.7b8bff52.css.map": "/2400100100114-4-4B-react2/static/css/main.7b8bff52.css.map",
+    "main.5206aa05.js.map": "/2400100100114-4-4B-react2/static/js/main.5206aa05.js.map"
   },
   "entrypoints": [
-    "static/css/main.b3c769bb.css",
-    "static/js/main.91a807c3.js"
+    "static/css/main.7b8bff52.css",
+    "static/js/main.5206aa05.js"
   ]
 }
