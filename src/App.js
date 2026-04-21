@@ -457,7 +457,7 @@ export default function App() {
               <div className="sidebar-avatar">
                 <img src={AvatarImg} alt="Profile" className="sidebar-pfp" />
                 <div className="sidebar-info-stack">
-                  <h3>Aru Shubham Singh</h3>
+                  <h3 className="sidebar-name-gradient">Aru Shubham Singh</h3>
                   <div className="status-indicator">
                     <span className="dot pulse-green"></span>
                     <span className="status-text">ONLINE</span>

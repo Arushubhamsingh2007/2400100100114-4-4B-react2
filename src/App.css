@@ -259,12 +259,30 @@ body {
 }
 
 .text-gradient {
-  color: #111827;
-  background: none;
+  display: inline-block;
+  font-size: 3.6rem;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  background: linear-gradient(45deg, #22d3ee, #a855f7, #f59e0b, #ec4899);
+  background-size: 300% 300%;
+  color: transparent;
   background-clip: text;
   -webkit-background-clip: text;
-  -webkit-text-fill-color: #111827;
-  margin-bottom: 10px;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 18px rgba(255, 255, 255, 0.25);
+  animation: neonGradient 5s ease infinite;
+  transition: transform 0.3s ease, text-shadow 0.3s ease;
+}
+
+.text-gradient:hover {
+  transform: scale(1.08);
+  text-shadow: 0 0 28px rgba(255, 255, 255, 0.45);
+}
+
+@keyframes neonGradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 .glassmorphism {
@@ -636,9 +654,25 @@ body {
 .sidebar-info-stack h3 {
   margin: 0;
   font-size: 1rem;
-  color: #111827;
   letter-spacing: 1px;
   font-weight: 700;
+}
+
+.sidebar-name-gradient {
+  background: linear-gradient(45deg, #22d3ee, #a855f7, #f59e0b, #ec4899);
+  background-size: 300% 300%;
+  color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.15);
+  animation: neonGradient 5s ease infinite;
+  transition: transform 0.3s ease, text-shadow 0.3s ease;
+}
+
+.sidebar-name-gradient:hover {
+  transform: scale(1.05);
+  text-shadow: 0 0 18px rgba(255, 255, 255, 0.4);
 }
 
 .sidebar-label {
